@@ -1,5 +1,5 @@
 {
-  "name": "starter-kit",
+  "name": "alertandote-web",
   "version": "1.0.0",
   "description": "Workflow para trabajar con webpack como bundler",
   "main": "index.js",
