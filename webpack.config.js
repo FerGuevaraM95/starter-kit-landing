@@ -1,16 +1,28 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
     entry: {
-        js: './src/js/index.js',
+        index: path.resolve(__dirname, 'src', 'js', 'index.js')
     },
     output: {
-        filename: '[name].[chunkhash].js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].[chunkhash].bundle.js',
+        // publicPath: 'dist/'
     },
     devtool: 'source-map',
+    devServer: {
+        open: true,
+        host: '0.0.0.0',
+        port: 5000,
+        clientLogLevel: 'silent',
+        compress: true,
+        // https: true,
+    },
     module: {
         rules: [
             {
@@ -25,11 +37,13 @@ module.exports = {
                 use: ['html-loader?minimize', 'pug-html-loader']
             },
             {
-                test: /\.(css|scss)$/,
+                test: /\.s[ac]ss$/,
                 use: [
                     'style-loader',
-                    MiniCssExtractPlugin.loader,
-                    'css-loader?minimize&sourceMap',
+                    {
+                        loader: MiniCssExtractPlugin.loader
+                    },
+                    'css-loader',
                     {
                         loader: 'postcss-loader',
                         options: {
@@ -41,7 +55,7 @@ module.exports = {
                         }
                     },
                     'resolve-url-loader',
-                    'sass-loader?outputStyle=compressed&sourceMap'
+                    'sass-loader'
                 ]
             },
             {
@@ -58,15 +72,17 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(['dist/**/*.*']),
+        new webpack.ProgressPlugin(),
+        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
-            filename: '[name].[chunkhash].css',
+            filename: 'styles.[chunkhash].css',
             chunkFilename: '[id].css'
         }),
         new HtmlWebpackPlugin({
-            template: './src/index.pug',
+            template: './src/pages/index.pug',
             filename: 'index.html',
-            chunks: ['js']
+            chunks: ['index'],
+            // favicon: './src/images/fav.ico'
         })
     ]
 }
