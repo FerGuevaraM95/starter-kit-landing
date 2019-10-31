@@ -4,3 +4,7 @@
 @function em($pixels, $context: $primaryFontSize) {
     @return #{$pixels/$context}em
 }
+
+@function em($pixels, $context: $primaryFontSize) {
+    @return #{$pixels/$context}em
+}

@@ -3,30 +3,24 @@
 //====================================
 @import "base/vars";
 @import "base/functions";
+@import "base/fonts";
+@import "base/keyframes";
+@import "base/mixins";
 
 //====================================
 // Layout
 //====================================
+@import "layout/reset";
 @import "layout/general";
 // @import "layout/header";
 // @import "layout/footer";
 
 //====================================
-// Seccions Landing
+// Seccion Home
 //====================================
 // @import "components/...";
 
 //====================================
-// Others Seccions
+// Other Seccion
 //====================================
 // @import "components/...";
-
-//====================================
-// Components Errors
-//====================================
-// @import "components/error";
-
-//====================================
-// Media Queries
-//====================================
-@import "layout/mediaqueries";
