@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
@@ -10,9 +9,18 @@ module.exports = {
         index: path.resolve(__dirname, 'src', 'js', 'index.js')
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist-dev'),
         filename: 'js/[name].[chunkhash].bundle.js',
         // publicPath: 'dist/'
+    },
+    devtool: 'source-map',
+    devServer: {
+        open: true,
+        host: '0.0.0.0',
+        port: 5000,
+        clientLogLevel: 'silent',
+        compress: true,
+        // https: true,
     },
     module: {
         rules: [
@@ -25,15 +33,22 @@ module.exports = {
             },
             {
                 test: /\.pug$/,
-                use: ['html-loader?minimize', 'pug-html-loader']
+                use: [
+                    {
+                        loader: 'html-loader',
+                        options: {
+                            minimize: false,
+                            removeComments: false,
+                            collapseWhitespace: false
+                        }
+                    }, 
+                    'pug-html-loader'
+                ]
             },
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
-                    // 'style-loader',
-                    {
-                        loader: MiniCssExtractPlugin.loader
-                    },
+                    'style-loader',
                     'css-loader',
                     {
                         loader: 'postcss-loader',
@@ -59,30 +74,6 @@ module.exports = {
                             outputPath: 'assets/images/',
                             useRelativePath: true
                         }
-                    },
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {
-                            options: {
-                                mozjpeg: {
-                                    progressive: true,
-                                    quality: 65
-                                },
-                                optipng: {
-                                    enabled: true,
-                                },
-                                pngquant: {
-                                    quality: [0.65, 0.90],
-                                    speed: 4
-                                },
-                                gifsicle: {
-                                    interlaced: false,
-                                },
-                                webp: {
-                                    quality: 75
-                                }
-                            }
-                        }
                     }
                 ]
             },
@@ -95,10 +86,6 @@ module.exports = {
     plugins: [
         new webpack.ProgressPlugin(),
         new CleanWebpackPlugin(),
-        new MiniCssExtractPlugin({
-            filename: 'css/styles.[chunkhash].css',
-            chunkFilename: '[id].css'
-        }),
         new HtmlWebpackPlugin({
             template: './src/pages/index.pug',
             filename: 'index.html',

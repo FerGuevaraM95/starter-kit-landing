@@ -4,9 +4,9 @@
   "description": "Workflow para trabajar con webpack como bundler",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development",
-    "build:develop": "webpack --mode development",
-    "build:production": "webpack --mode production"
+    "start": "webpack-dev-server --config ./webpack.dev.js --mode development",
+    "build:develop": "webpack --config ./webpack.dev.js --mode development",
+    "build:production": "webpack --config ./webpack.config.js --mode production"
   },
   "keywords": [
     "webpack"
