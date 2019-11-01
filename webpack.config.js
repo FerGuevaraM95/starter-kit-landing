@@ -11,7 +11,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[chunkhash].bundle.js',
+        filename: 'js/[name].[chunkhash].bundle.js',
         // publicPath: 'dist/'
     },
     devtool: 'source-map',
@@ -37,9 +37,9 @@ module.exports = {
                 use: ['html-loader?minimize', 'pug-html-loader']
             },
             {
-                test: /\.s[ac]ss$/,
+                test: /\.(sa|sc|c)ss$/,
                 use: [
-                    'style-loader',
+                    // 'style-loader',
                     {
                         loader: MiniCssExtractPlugin.loader
                     },
@@ -61,8 +61,40 @@ module.exports = {
             {
                 test: /\.(jpe?g|png|gif|svg|webp)$/i,
                 use: [
-                    'file-loader?name=assets/[name].[ext]',
-                    'image-webpack-loader?bypassOnDebug'
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/images/',
+                            useRelativePath: true
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            options: {
+                                mozjpeg: {
+                                    progressive: true,
+                                    quality: 65
+                                },
+                                // optipng.enabled: false will disable optipng
+                                optipng: {
+                                    enabled: true,
+                                },
+                                pngquant: {
+                                    quality: [0.65, 0.90],
+                                    speed: 4
+                                },
+                                gifsicle: {
+                                    interlaced: false,
+                                },
+                                // the webp option will enable WEBP
+                                webp: {
+                                    quality: 75
+                                }
+                            }
+                        }
+                    }
                 ]
             },
             {
@@ -75,14 +107,14 @@ module.exports = {
         new webpack.ProgressPlugin(),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
-            filename: 'styles.[chunkhash].css',
+            filename: 'css/styles.[chunkhash].css',
             chunkFilename: '[id].css'
         }),
         new HtmlWebpackPlugin({
             template: './src/pages/index.pug',
             filename: 'index.html',
             chunks: ['index'],
-            // favicon: './src/images/fav.ico'
+            favicon: './src/assets/icons/favicon.ico'
         })
     ]
 }
